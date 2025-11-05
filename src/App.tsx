@@ -175,7 +175,7 @@ export default function App() {
           />
           <SheetContent
             side="left"
-            className="p-0 w-64"
+            className="p-0 w-54"
             aria-describedby={undefined}
           >
             <Sidebar isMobile={true} />
@@ -223,21 +223,10 @@ export default function App() {
       <Toaster position="top-center" />
       <div className="h-screen overflow-hidden">
       <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel
-          ref={sidebarRef}
-          defaultSize={15}
-          minSize={5}
-          maxSize={20}
-          collapsible={true}
-          className="min-w-[74px]"
-        >
           <Sidebar
             isCollapsed={sidebarCollapsed}
             onToggleCollapse={handleToggleCollapse}
           />
-        </ResizablePanel>
-
-        <ResizableHandle />
 
         <ResizablePanel
           ref={feedRef}

@@ -671,12 +671,16 @@
     width: calc(var(--spacing) * 16);
   }
 
-  .w-64 {
-    width: calc(var(--spacing) * 64);
+  .w-54 {
+    width: calc(var(--spacing) * 54);
   }
 
-  .w-\[74px\] {
-    width: 74px;
+  .w-\[54px\] {
+    width: 54px;
+  }
+
+  .w-\[184px\] {
+    width: 184px;
   }
 
   .w-fit {
@@ -697,10 +701,6 @@
 
   .min-w-0 {
     min-width: calc(var(--spacing) * 0);
-  }
-
-  .min-w-\[74px\] {
-    min-width: 74px;
   }
 
   .flex-1 {
