@@ -1,4 +1,5 @@
 import { projectId, publicAnonKey } from './supabase/info';
+import { localComments } from './localStorage';
 
 const API_BASE = `https://${projectId}.supabase.co/functions/v1/make-server-ff00f4a9`;
 
@@ -21,29 +22,60 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
 }
 
 export const api = {
-  // Initialize database with seed data
+  // Initialize database with seed data (read-only for content)
   seedDatabase: () => fetchAPI('/seed', { method: 'POST' }),
 
-  // Get all stories
+  // Get all stories (read-only from Supabase)
   getStories: () => fetchAPI('/stories'),
 
-  // Get feed items
+  // Get feed items (read-only from Supabase)
   getFeed: () => fetchAPI('/feed'),
 
-  // Get thread with comments
-  getThread: (id: string) => fetchAPI(`/threads/${id}`),
+  // Get thread with comments (combines Supabase data + localStorage comments)
+  getThread: async (id: string) => {
+    const serverData = await fetchAPI(`/threads/${id}`);
+    const localThreadComments = localComments.getThreadComments(id);
+    
+    // Combine server comments with local comments
+    const allComments = [
+      ...(serverData.comments || []),
+      ...localThreadComments,
+    ];
+    
+    // Sort by creation date
+    allComments.sort((a, b) => 
+      new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    );
+    
+    return {
+      ...serverData,
+      comments: allComments,
+      commentCount: allComments.length,
+    };
+  },
 
-  // Add comment to thread
-  addComment: (threadId: string, userId: string, content: string) =>
-    fetchAPI(`/threads/${threadId}/comments`, {
-      method: 'POST',
-      body: JSON.stringify({ userId, content }),
-    }),
+  // Add comment to thread (localStorage only - no server write)
+  addComment: (threadId: string, userName: string, content: string, userAvatar?: string) => {
+    return Promise.resolve(
+      localComments.addComment(threadId, userName, content, userAvatar)
+    );
+  },
 
-  // Get aclonas
+  // Get aclonas (read-only from Supabase)
   getAclonas: () => fetchAPI('/aclonas'),
 
-  // Like a thread
-  likeThread: (threadId: string) =>
-    fetchAPI(`/threads/${threadId}/like`, { method: 'POST' }),
+  // Like tracking is now local only
+  likeThread: (threadId: string) => {
+    // Store likes in localStorage too
+    const key = `jobeee_likes:${threadId}`;
+    const current = parseInt(localStorage.getItem(key) || '0', 10);
+    localStorage.setItem(key, String(current + 1));
+    return Promise.resolve({ likeCount: current + 1 });
+  },
+
+  // Get local like count for a thread
+  getLocalLikes: (threadId: string): number => {
+    const key = `jobeee_likes:${threadId}`;
+    return parseInt(localStorage.getItem(key) || '0', 10);
+  },
 };

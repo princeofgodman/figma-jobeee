@@ -1,4 +1,4 @@
-import { Play, Send, User } from 'lucide-react';
+import { Play, Send, User, HardDrive } from 'lucide-react';
 import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
 import { useState, useEffect } from 'react';
@@ -51,10 +51,16 @@ export function RightPanel({ selectedThreadId }: RightPanelProps) {
     if (!comment.trim() || !selectedThreadId) return;
 
     try {
-      // Using first user as demo user
-      await api.addComment(selectedThreadId, 'user-1', comment);
+      // Comments are now stored in localStorage only
+      // Using a demo user name - in a real app, this would come from auth
+      await api.addComment(
+        selectedThreadId, 
+        'Demo User', 
+        comment,
+        'https://api.dicebear.com/7.x/avataaars/svg?seed=demo'
+      );
       setComment('');
-      toast.success('Comment added!');
+      toast.success('💬 Comment saved locally!');
       // Reload thread to show new comment
       loadThread(selectedThreadId);
     } catch (error) {
@@ -88,43 +94,60 @@ export function RightPanel({ selectedThreadId }: RightPanelProps) {
 
               {/* Comments */}
               <div className="space-y-3 mb-4 max-h-64 overflow-y-auto">
-                {threadData.comments?.map((c: any) => (
-                  <div key={c.id} className="flex gap-3">
-                    {c.userAvatar ? (
-                      <img src={c.userAvatar} alt={c.userName} className="w-8 h-8 rounded-full flex-shrink-0" />
-                    ) : (
-                      <div className="w-8 h-8 rounded-full bg-slate-300 dark:bg-slate-600 flex items-center justify-center flex-shrink-0">
-                        <User className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+                {threadData.comments?.map((c: any) => {
+                  const isLocalComment = c.id.startsWith('local-comment-');
+                  return (
+                    <div 
+                      key={c.id} 
+                      className={`flex gap-3 ${isLocalComment ? 'bg-blue-50 dark:bg-blue-900/10 p-2 rounded-lg border border-blue-200 dark:border-blue-800' : ''}`}
+                    >
+                      {c.userAvatar ? (
+                        <img src={c.userAvatar} alt={c.userName} className="w-8 h-8 rounded-full flex-shrink-0" />
+                      ) : (
+                        <div className="w-8 h-8 rounded-full bg-slate-300 dark:bg-slate-600 flex items-center justify-center flex-shrink-0">
+                          <User className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+                        </div>
+                      )}
+                      <div className="flex-1">
+                        <div className="text-sm flex items-center gap-2">
+                          <span className="text-slate-700 dark:text-slate-300">{c.userName}</span>
+                          {isLocalComment && (
+                            <span className="text-xs bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-1.5 py-0.5 rounded">
+                              Local
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm text-slate-600 dark:text-slate-400">{c.content}</p>
                       </div>
-                    )}
-                    <div className="flex-1">
-                      <div className="text-sm">
-                        <span className="text-slate-700 dark:text-slate-300">{c.userName}</span>
-                      </div>
-                      <p className="text-sm text-slate-600 dark:text-slate-400">{c.content}</p>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
             {/* Comment input */}
-            <div className="flex gap-2">
-              <Textarea 
-                placeholder="Leave a comment..." 
-                className="resize-none bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-400"
-                rows={2}
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-              />
-              <Button 
-                size="icon" 
-                onClick={handleSubmitComment}
-                disabled={!comment.trim()}
-                className="flex-shrink-0"
-              >
-                <Send className="h-4 w-4" />
-              </Button>
+            <div className="space-y-2">
+              <div className="flex gap-2">
+                <Textarea 
+                  placeholder="Leave a comment..." 
+                  className="resize-none bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-400"
+                  rows={2}
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                />
+                <Button 
+                  size="icon" 
+                  onClick={handleSubmitComment}
+                  disabled={!comment.trim()}
+                  className="flex-shrink-0"
+                >
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+                <HardDrive className="h-3 w-3" />
+                <span>Comments are stored locally in your browser</span>
+              </div>
             </div>
           </>
         )}

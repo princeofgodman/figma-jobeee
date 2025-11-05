@@ -1,7 +1,11 @@
 # Database Structure
 
 ## Overview
-This application uses Supabase KV Store to manage data for a social learning platform where companies create training scenarios and users share experiences.
+This application uses a **hybrid storage approach**:
+- **Supabase KV Store**: Read-only content (stories, threads, quizzes, aclonas, companies, users)
+- **localStorage**: User-generated data (comments, likes)
+
+This ensures the Supabase database cannot be polluted with user data while still providing full interactivity.
 
 ## Entities
 
@@ -97,16 +101,19 @@ This application uses Supabase KV Store to manage data for a social learning pla
 ### Comments
 Комментарии пользователей к тредам.
 
-**Storage:** `comment:{commentId}`
+**Storage:** 
+- **Supabase**: `comment:{commentId}` (seed data only, read-only)
+- **localStorage**: `jobeee_comments:{threadId}` (user-generated comments)
 
 **Fields:**
 - `id` - Unique identifier
 - `threadId` - Thread being commented on
-- `userId` - User who wrote the comment
-- `userName` - User's display name (denormalized)
-- `userAvatar` - User's avatar (denormalized)
+- `userName` - User's display name
+- `userAvatar` - User's avatar URL (optional)
 - `content` - Comment text
 - `createdAt` - Creation timestamp
+
+**Note:** New comments are stored in localStorage only. When displaying comments, the app combines seed comments from Supabase with local comments from localStorage.
 
 ## Indexes
 
@@ -139,8 +146,8 @@ For efficient querying, the following index keys are used:
 
 ### Add Comment
 `POST /make-server-ff00f4a9/threads/:id/comments`
-- Body: `{ userId: string, content: string }`
-- Adds a new comment to a thread
+- **DISABLED** - Returns 403 error
+- Comments are now stored in localStorage only via frontend API
 
 ### Aclonas
 `GET /make-server-ff00f4a9/aclonas`
@@ -148,7 +155,8 @@ For efficient querying, the following index keys are used:
 
 ### Like Thread
 `POST /make-server-ff00f4a9/threads/:id/like`
-- Increments like count on a thread
+- **DISABLED** - Returns 403 error
+- Likes are now stored in localStorage only (`jobeee_likes:{threadId}`)
 
 ## Initial Setup
 
@@ -161,4 +169,37 @@ Sample data includes:
 - 3 threads with different scenarios
 - 2 quizzes
 - 2 aclonas
-- 5 comments on threads
+- 5 comments on threads (read-only seed data)
+
+## localStorage Schema
+
+User-generated data is stored in localStorage with the following keys:
+
+### Comments
+- **Key**: `jobeee_comments:{threadId}`
+- **Value**: JSON array of comment objects
+- **Structure**: 
+  ```json
+  [{
+    "id": "local-comment-1234567890-abc123",
+    "threadId": "thread-1",
+    "userName": "Demo User",
+    "userAvatar": "https://...",
+    "content": "This is a comment",
+    "createdAt": "2025-11-05T12:00:00.000Z"
+  }]
+  ```
+
+### Likes
+- **Key**: `jobeee_likes:{threadId}`
+- **Value**: String number (e.g., "5")
+- **Description**: Count of local likes for the thread
+
+### Utility Functions
+
+The `/utils/localStorage.ts` module provides helper functions:
+- `localComments.getThreadComments(threadId)` - Get all comments for a thread
+- `localComments.addComment(threadId, userName, content, userAvatar)` - Add a new comment
+- `localComments.deleteComment(threadId, commentId)` - Remove a comment
+- `localComments.clearThreadComments(threadId)` - Clear all comments for a thread
+- `localComments.clearAllComments()` - Clear all stored comments

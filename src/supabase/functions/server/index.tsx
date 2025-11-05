@@ -139,48 +139,12 @@ app.get("/make-server-ff00f4a9/threads/:id", async (c) => {
   }
 });
 
-// Add comment to thread
+// Comments are now managed in localStorage on the frontend
+// This endpoint is disabled to prevent database writes
 app.post("/make-server-ff00f4a9/threads/:id/comments", async (c) => {
-  try {
-    const threadId = c.req.param("id");
-    const body = await c.req.json();
-    
-    const thread = await kv.get<Thread>(`thread:${threadId}`);
-    if (!thread) {
-      return c.json({ error: "Thread not found" }, 404);
-    }
-    
-    const user = await kv.get<User>(`user:${body.userId}`);
-    if (!user) {
-      return c.json({ error: "User not found" }, 404);
-    }
-    
-    const commentId = `comment-${Date.now()}`;
-    const comment: Comment = {
-      id: commentId,
-      threadId,
-      userId: body.userId,
-      userName: user.name,
-      userAvatar: user.avatar,
-      content: body.content,
-      createdAt: new Date().toISOString(),
-    };
-    
-    await kv.set(`comment:${commentId}`, comment);
-    
-    // Update comment index
-    const commentIds = await kv.get<string[]>(`index:comments:thread:${threadId}`) || [];
-    await kv.set(`index:comments:thread:${threadId}`, [...commentIds, commentId]);
-    
-    // Update comment count on thread
-    thread.commentCount += 1;
-    await kv.set(`thread:${threadId}`, thread);
-    
-    return c.json(comment);
-  } catch (error) {
-    console.error("Error adding comment:", error);
-    return c.json({ error: String(error) }, 500);
-  }
+  return c.json({ 
+    error: "Comments are stored locally only. Use localStorage API on frontend." 
+  }, 403);
 });
 
 // Get aclonas (right panel content)
@@ -206,24 +170,12 @@ app.get("/make-server-ff00f4a9/aclonas", async (c) => {
   }
 });
 
-// Toggle like on thread
+// Likes are now managed in localStorage on the frontend
+// This endpoint is disabled to prevent database writes
 app.post("/make-server-ff00f4a9/threads/:id/like", async (c) => {
-  try {
-    const threadId = c.req.param("id");
-    const thread = await kv.get<Thread>(`thread:${threadId}`);
-    
-    if (!thread) {
-      return c.json({ error: "Thread not found" }, 404);
-    }
-    
-    thread.likeCount += 1;
-    await kv.set(`thread:${threadId}`, thread);
-    
-    return c.json({ likeCount: thread.likeCount });
-  } catch (error) {
-    console.error("Error liking thread:", error);
-    return c.json({ error: String(error) }, 500);
-  }
+  return c.json({ 
+    error: "Likes are stored locally only. Use localStorage API on frontend." 
+  }, 403);
 });
 
 Deno.serve(app.fetch);

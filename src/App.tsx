@@ -157,25 +157,31 @@ export default function App() {
             </div>
           ))
         ) : (
-          feedItems.map((item) => (
-            <FeedCard
-              key={item.id}
-              type={item.type === 'quiz' ? 'quizz' : item.type}
-              title={item.data.title}
-              preview={item.data.description}
-              tags={item.data.tags}
-              imageUrl={item.data.imageUrl}
-              company={item.data.company}
-              likeCount={item.data.likeCount}
-              commentCount={item.data.commentCount}
-              scale={scale}
-              onCardClick={() => {
-                if (item.type === 'thread') {
-                  setSelectedThread(item.id);
-                }
-              }}
-            />
-          ))
+          feedItems.map((item) => {
+            // Add local likes to server likes
+            const localLikes = api.getLocalLikes(item.id);
+            const totalLikes = (item.data.likeCount || 0) + localLikes;
+            
+            return (
+              <FeedCard
+                key={item.id}
+                type={item.type === 'quiz' ? 'quizz' : item.type}
+                title={item.data.title}
+                preview={item.data.description}
+                tags={item.data.tags}
+                imageUrl={item.data.imageUrl}
+                company={item.data.company}
+                likeCount={totalLikes}
+                commentCount={item.data.commentCount}
+                scale={scale}
+                onCardClick={() => {
+                  if (item.type === 'thread') {
+                    setSelectedThread(item.id);
+                  }
+                }}
+              />
+            );
+          })
         )}
       </div>
     </div>
