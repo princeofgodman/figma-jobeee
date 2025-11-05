@@ -246,24 +246,14 @@ export default function App() {
       <Toaster position="top-center" />
       <div className="h-screen overflow-hidden">
       <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel
-          ref={sidebarRef}
-          defaultSize={5}
-          minSize={5}
-          maxSize={20}
-          collapsible={true}
-        >
-          <Sidebar
-            isCollapsed={sidebarCollapsed}
-            onToggleCollapse={handleToggleCollapse}
-          />
-        </ResizablePanel>
-
-        <ResizableHandle />
+        <Sidebar
+          isCollapsed={sidebarCollapsed}
+          onToggleCollapse={handleToggleCollapse}
+        />
 
         <ResizablePanel
           ref={feedRef}
-          defaultSize={60}
+          defaultSize={45}
           minSize={30}
         >
           {feedContent}
@@ -273,7 +263,7 @@ export default function App() {
 
         <ResizablePanel
           ref={rightPanelRef}
-          defaultSize={35}
+          defaultSize={50}
           minSize={20}
           maxSize={55}
           onResize={(size) => setRightPanelSize(size)}
